@@ -1,0 +1,35 @@
+pipeline {
+    agent {
+		node {
+			label 'worker'
+	}
+}
+triggers {
+        pollSCM('* * * * *') 
+    }
+    stages {
+        stage('Repo clone') {
+            steps {
+                echo 'This is Repo clone stage'
+                sh 'rm -rf *'
+                sh 'git clone -b maven https://github.com/jkirthi90/myfirstJenkinsrepo.git'
+				  }
+			}
+		stage ('Build'){
+		steps {
+		  echo 'This is Build stage'
+		  sh 'pwd'
+		  sh 'ls'
+		  sh 'hostname'
+		  sh 'whoami'
+		  sh 'cd myfirstJenkinsrepo/my-app && mvn clean && mvn package'
+		  }
+		  }
+		stage ('Test'){
+		steps {
+		  sh 'cd myfirstJenkinsrepo/my-app && java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App'
+		  }  
+		}
+		}
+	}
+
